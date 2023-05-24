@@ -2,9 +2,9 @@ use serenity::model::prelude::{ChannelId, GuildId};
 use shuttle_secrets::SecretStore;
 
 pub struct Secrets {
-    token: String,
-    guild_id: GuildId,
-    channel_id: ChannelId,
+    pub token: String,
+    pub guild_id: GuildId,
+    pub channel_id: ChannelId,
 }
 
 /// get secrets from secrets.toml and parse them appropriately
