@@ -1,17 +1,19 @@
 use serenity::model::channel::Message;
 use serenity::model::gateway::Ready;
 use serenity::model::prelude::ChannelId;
-use serenity::prelude::*;
-use serenity::{async_trait, model::prelude::GuildId};
+use serenity::prelude::{Context, GatewayIntents};
+use serenity::Client;
+use serenity::{async_trait, prelude::EventHandler};
 use shuttle_secrets::SecretStore;
-use tracing::{error, info};
+use tracing::info;
 
+mod channel;
 mod secrets;
 
+use channel::update_channel_name;
 use secrets::{get_secrets, Secrets};
 
 struct Bot {
-    guild_id: GuildId,
     channel_id: ChannelId,
 }
 
@@ -19,9 +21,7 @@ struct Bot {
 impl EventHandler for Bot {
     async fn message(&self, ctx: Context, msg: Message) {
         if msg.content == "!hello" {
-            if let Err(e) = msg.channel_id.say(&ctx.http, "world!").await {
-                error!("Error sending message: {:?}", e);
-            }
+            println!("hi")
         }
     }
 
@@ -37,17 +37,10 @@ async fn serenity(
     // Set gateway intents, which decides what events the bot will be notified about
     let intents = GatewayIntents::GUILD_MESSAGES | GatewayIntents::MESSAGE_CONTENT;
 
-    let Secrets {
-        token,
-        channel_id,
-        guild_id,
-    } = get_secrets(secret_store);
+    let Secrets { token, channel_id } = get_secrets(secret_store);
 
     let client = Client::builder(&token, intents)
-        .event_handler(Bot {
-            guild_id,
-            channel_id,
-        })
+        .event_handler(Bot { channel_id })
         .await
         .expect("Err creating client");
 

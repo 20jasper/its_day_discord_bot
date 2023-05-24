@@ -1,9 +1,8 @@
-use serenity::model::prelude::{ChannelId, GuildId};
+use serenity::model::prelude::ChannelId;
 use shuttle_secrets::SecretStore;
 
 pub struct Secrets {
     pub token: String,
-    pub guild_id: GuildId,
     pub channel_id: ChannelId,
 }
 
@@ -25,19 +24,5 @@ pub fn get_secrets(secret_store: SecretStore) -> Secrets {
         panic!("'DISCORD_CHANNEL_ID' was not found");
     };
 
-    let guild_id = if let Some(guild_id) = secret_store.get("DISCORD_GUILD_ID") {
-        let guild_id: u64 = match guild_id.parse() {
-            Ok(guild_id) => guild_id,
-            Err(error) => panic!("failed to parse DISCORD_GUILD_ID: {error}"),
-        };
-        GuildId(guild_id)
-    } else {
-        panic!("'DISCORD_GUILD_ID' was not found");
-    };
-
-    Secrets {
-        token,
-        guild_id,
-        channel_id,
-    }
+    Secrets { token, channel_id }
 }
