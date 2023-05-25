@@ -21,7 +21,10 @@ struct Bot {
 impl EventHandler for Bot {
     async fn message(&self, ctx: Context, msg: Message) {
         if msg.content == "!hello" {
-            println!("hi")
+            match update_channel_name(ctx, self.channel_id).await {
+                Ok(_) => println!("update channel name successful!"),
+                Err(error) => panic!("update channel name failed: {error}"),
+            };
         }
     }
 
