@@ -24,4 +24,7 @@ jobs:
     - name: Configure Dependency Caching
       uses: Swatinem/rust-cache@v2
     - name: run
+      env:
+        DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        DISCORD_CHANNEL_ID: ${{ secrets.DISCORD_CHANNEL_ID }}
       run: cargo run 
