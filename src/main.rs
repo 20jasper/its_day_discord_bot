@@ -12,10 +12,5 @@ async fn main() {
 
     let http = Http::new(&token);
 
-    channel_id
-        .say(&http, "hello everyone")
-        .await
-        .expect("there is a mistake with say");
-
-    update_channel_name(http, channel_id, "hello-testing").await;
+    update_channel_name(http, channel_id).await;
 }
